@@ -13,7 +13,6 @@ function jobRoleOther() {
 
     jobRoleSelect.addEventListener('change', () => {
         if ( jobRoleSelect.value == 'other' ) {
-            
             otherJobInput.style.display = 'inline-block';
         } else {
             otherJobInput.style.display = 'none';
