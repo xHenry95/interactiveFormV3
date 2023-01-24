@@ -68,3 +68,39 @@ function calcTotalActivities() {
     })
 }
 calcTotalActivities();
+
+// Payment methods options display 
+function paymentMethods() {
+    const paymentMethodSelect = document.getElementById('payment');
+    const payPalBox = document.getElementById('paypal');
+    const bitcoinBox = document.getElementById('bitcoin');
+    function displayToNone(element) {
+        element.style.display = 'none';
+    }
+    function displayToShow(element) {
+        element.style.display = '';
+    }
+
+    paymentMethodSelect.children[1].selected = true; // setting payment selected to be Credit Card
+    displayToNone(payPalBox);
+    displayToNone(bitcoinBox);
+    
+    paymentMethodSelect.addEventListener('change', () => {
+        const cardInfo = document.getElementById('credit-card');
+        if ( paymentMethodSelect.children[1].selected !== true ) { // if Credit Card is NOT selected
+            displayToNone(cardInfo);
+            if ( paymentMethodSelect.children[2].selected === true ) { // if PayPal is selected
+                displayToShow(payPalBox);
+                displayToNone(bitcoinBox);
+            } else { // otherwise, the only other selection can be Bitcoin
+                displayToShow(bitcoinBox);
+                displayToNone(payPalBox);
+            }
+        } else {
+            cardInfo.style.display = '';
+            displayToNone(payPalBox);
+            displayToNone(bitcoinBox);
+        }
+    })
+}
+paymentMethods(); 
