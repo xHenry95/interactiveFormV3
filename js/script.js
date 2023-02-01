@@ -105,67 +105,76 @@ function paymentMethods() {
 }
 paymentMethods();
 
-function nameTest(e, name) {
-    if ( !/^[a-zA-Z ]{2,30}$/.test(name) ) {
-        alert('Please provide a valid name.');
+function toggleClassValid(element, addClass, removeClass) {
+    element.classList.add(addClass);
+    element.classList.remove(removeClass);
+}
+function regExTest( regEx, element, e ) {
+    if ( !regEx.test(element.value) ) {
+        toggleClassValid(element.parentNode, 'not-valid', 'valid');
+        element.parentNode.lastElementChild.style.display = 'inline-block';
+        console.log(element.parentNode.lastElementChild);
         e.preventDefault();
+    } else {
+        toggleClassValid(element.parentNode, 'valid', 'not-valid');
+        element.parentNode.lastElementChild.style.display = 'none';
     }
 }
-function emailTest(e, email) {
-    if ( !/^[^@]+@[^@.]+\.[a-z]+$/i.test(email) ) {
-        alert('Please provide a valid email address.');
-        e.preventDefault();
-    }
-}
-function ccNumTest(e, ccNum) {
-    if ( !/(?:\d[ -]*?){13,16}/.test(ccNum) ) {
-        alert('Please enter a valid card number.');
-        e.preventDefault();
-    }
-}
-function zipTest(e, zipCode) {
-    if ( !/\b\d{5}\b/.test(zipCode) ) {
-        alert('Please enter a valid zip code.');
-        e.preventDefault();
-    }
-}
-function cvvTest(e, cvvNum) {
-    if ( !/\d\d\d/.test(cvvNum) ) {
-        alert('Please enter a valid CVV.');
-        e.preventDefault();
-    }
-}
+
+const nameRegEx = /^[a-zA-Z ]{2,30}$/;
+const emailRegEx = /^[^@]+@[^@.]+\.[a-z]+$/i;
+const ccNumRegEx = /(?:\d[ -]*?){13,16}/;
+const zipRegEx = /\b\d{5}\b/;
+const cvvRegEx = /\d\d\d/;
 
 function submitListener() {
     const submitBtn = document.querySelector('button[type="submit"]');
     submitBtn.addEventListener('click', (e) => {
        
         // Check if name field
-        const nameFieldValue = document.getElementById('name').value;
-        nameTest(e, nameFieldValue)
+        const nameField = document.getElementById('name');
+        regExTest(nameRegEx, nameField, e);
 
         // Check if valid email address
-        const emailAddress = document.getElementById('email').value;
-        emailTest(e, emailAddress)
+        const emailAddress = document.getElementById('email');
+        regExTest(emailRegEx, emailAddress, e);
 
-        // // Check for selected activities
+        // Check for selected activities
         const totalCostPara = document.getElementById('activities-cost');
         if ( totalCostPara.textContent === `Total: $0` ) {
-            alert('Please register for at least one activity.');
+            toggleClassValid(totalCostPara.parentNode, 'not-valid', 'valid');
             e.preventDefault();
+        } else {
+            toggleClassValid(totalCostPara.parentNode, 'valid', 'not-valid');
         }
 
-        // // Check card information if selected
+        // Check card information if selected
         const cardPayment = document.getElementById('payment').children[1];
         if ( cardPayment.selected === true ) {
-            const ccNum = document.getElementById('cc-num').value;
-            const zipCode = document.getElementById('zip').value;
-            const cvvNum = document.getElementById('cvv').value; 
-            ccNumTest(e, ccNum);
-            zipTest(e, zipCode);
-            cvvTest(e, cvvNum);
+            const ccNum = document.getElementById('cc-num');
+            const zipCode = document.getElementById('zip');
+            const cvvNum = document.getElementById('cvv'); 
+            regExTest(ccNumRegEx, ccNum, e);
+            regExTest(zipRegEx, zipCode, e);
+            regExTest(cvvRegEx, cvvNum, e);
         }
-
     })
 }
 submitListener();
+
+function activitiesFocus() {
+    const activitiesCheckboxes = document.querySelectorAll('#activities-box label input[type="checkbox"]');
+    activitiesCheckboxes.forEach( (checkbox) => {
+        checkbox.addEventListener('focus', (e) => {
+            console.log(e.target);
+            e.target.parentElement.className = 'focus';
+        })
+    })
+    activitiesCheckboxes.forEach( (checkbox) => {
+        checkbox.addEventListener('blur', (e) => {
+            console.log(checkbox);
+            e.target.parentElement.className = '';
+        })
+    })
+}
+activitiesFocus();
