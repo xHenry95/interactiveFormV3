@@ -149,8 +149,8 @@ const zipRegEx = /\b\d{5}\b/;
 const cvvRegEx = /\d\d\d/;
 
 function submitListener() {
-    const submitBtn = document.querySelector('button[type="submit"]');
-    submitBtn.addEventListener('click', (e) => {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
        
         // Check if name field
         const nameField = document.getElementById('name');
