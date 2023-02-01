@@ -103,4 +103,69 @@ function paymentMethods() {
         }
     })
 }
-paymentMethods(); 
+paymentMethods();
+
+function nameTest(e, name) {
+    if ( !/^[a-zA-Z ]{2,30}$/.test(name) ) {
+        alert('Please provide a valid name.');
+        e.preventDefault();
+    }
+}
+function emailTest(e, email) {
+    if ( !/^[^@]+@[^@.]+\.[a-z]+$/i.test(email) ) {
+        alert('Please provide a valid email address.');
+        e.preventDefault();
+    }
+}
+function ccNumTest(e, ccNum) {
+    if ( !/(?:\d[ -]*?){13,16}/.test(ccNum) ) {
+        alert('Please enter a valid card number.');
+        e.preventDefault();
+    }
+}
+function zipTest(e, zipCode) {
+    if ( !/\b\d{5}\b/.test(zipCode) ) {
+        alert('Please enter a valid zip code.');
+        e.preventDefault();
+    }
+}
+function cvvTest(e, cvvNum) {
+    if ( !/\d\d\d/.test(cvvNum) ) {
+        alert('Please enter a valid CVV.');
+        e.preventDefault();
+    }
+}
+
+function submitListener() {
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.addEventListener('click', (e) => {
+       
+        // Check if name field
+        const nameFieldValue = document.getElementById('name').value;
+        nameTest(e, nameFieldValue)
+
+        // Check if valid email address
+        const emailAddress = document.getElementById('email').value;
+        emailTest(e, emailAddress)
+
+        // // Check for selected activities
+        const totalCostPara = document.getElementById('activities-cost');
+        if ( totalCostPara.textContent === `Total: $0` ) {
+            alert('Please register for at least one activity.');
+            e.preventDefault();
+        }
+
+        // // Check card information if selected
+        const cardPayment = document.getElementById('payment').children[1];
+        if ( cardPayment.selected === true ) {
+            const ccNum = document.getElementById('cc-num').value;
+            const zipCode = document.getElementById('zip').value;
+            const cvvNum = document.getElementById('cvv').value; 
+            ccNumTest(e, ccNum);
+            zipTest(e, zipCode);
+            cvvTest(e, cvvNum);
+        }
+
+    })
+}
+submitListener();
