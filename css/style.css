@@ -478,6 +478,12 @@ button:hover {
   background: rgba(197, 163, 175, 0.1) !important;
 }
 
+/* ADDED TO MAKE IT MORE CLEAR WHY YOU CANNOT SELECT */
+.disabled span {
+  transition:  all 0.3s ease-out;
+  color: rgb(247, 69, 69);
+}
+
 /* ================================= 
   Media queries styles
 ==================================== */

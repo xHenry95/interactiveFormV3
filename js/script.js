@@ -57,12 +57,34 @@ function calcTotalActivities() {
     activitiesFieldset.addEventListener('change', (e) => {
         const totalCostPara = document.getElementById('activities-cost');
         const targetCost = parseInt(e.target.dataset.cost);
+
+        const listOfSelections = document.querySelectorAll('#activities-box label');
+        const targetSelectionDateTime = e.target.dataset.dayAndTime;
+
         if ( e.target.checked ) {
             // if target checked = true, add targetCost to sum 
             runningTotal += targetCost;
+
+            // disable matching time events
+            for ( let i = 0; i < listOfSelections.length; i++ ) {
+                if ( targetSelectionDateTime === listOfSelections[i].children[0].dataset.dayAndTime &&
+                     e.target.name !== listOfSelections[i].children[0].name ) {
+                        listOfSelections[i].children[0].disabled = 'true';
+                        listOfSelections[i].classList.add('disabled');
+                }
+            }
         } else {
             // else, remove targetCost from sum
             runningTotal -= targetCost;
+
+            // enable matching time events
+            for ( let i = 0; i < listOfSelections.length; i++ ) {
+                if ( targetSelectionDateTime === listOfSelections[i].children[0].dataset.dayAndTime &&
+                     e.target.name !== listOfSelections[i].children[0].name ) {
+                        listOfSelections[i].children[0].disabled = '';
+                        listOfSelections[i].classList.remove('disabled');
+                }
+            }
         }
         totalCostPara.textContent = `Total: $${runningTotal}`;
     })
@@ -113,7 +135,6 @@ function regExTest( regEx, element, e ) {
     if ( !regEx.test(element.value) ) {
         toggleClassValid(element.parentNode, 'not-valid', 'valid');
         element.parentNode.lastElementChild.style.display = 'inline-block';
-        console.log(element.parentNode.lastElementChild);
         e.preventDefault();
     } else {
         toggleClassValid(element.parentNode, 'valid', 'not-valid');
@@ -143,9 +164,11 @@ function submitListener() {
         const totalCostPara = document.getElementById('activities-cost');
         if ( totalCostPara.textContent === `Total: $0` ) {
             toggleClassValid(totalCostPara.parentNode, 'not-valid', 'valid');
+            totalCostPara.parentNode.lastElementChild.style.display = 'inline-block';
             e.preventDefault();
         } else {
             toggleClassValid(totalCostPara.parentNode, 'valid', 'not-valid');
+            totalCostPara.parentNode.lastElementChild.style.display = 'none';
         }
 
         // Check card information if selected
@@ -166,15 +189,39 @@ function activitiesFocus() {
     const activitiesCheckboxes = document.querySelectorAll('#activities-box label input[type="checkbox"]');
     activitiesCheckboxes.forEach( (checkbox) => {
         checkbox.addEventListener('focus', (e) => {
-            console.log(e.target);
             e.target.parentElement.className = 'focus';
         })
     })
     activitiesCheckboxes.forEach( (checkbox) => {
         checkbox.addEventListener('blur', (e) => {
-            console.log(checkbox);
             e.target.parentElement.className = '';
         })
     })
 }
 activitiesFocus();
+
+function realTimeValidator() {
+    // Check if name field
+    const nameField = document.getElementById('name');
+    const nameHint = document.getElementById('name-hint');
+    nameField.addEventListener('keyup', (e) => {
+        regExTest(nameRegEx, nameField, e);
+        if ( nameField.value !== '' ) {
+            nameHint.textContent = 'Please enter a valid name';
+        } else {
+            nameHint.textContent = 'Name field cannot be blank';
+        }
+    })
+    // Check if email field
+    const emailField = document.getElementById('email');
+    const emailHint = document.getElementById('email-hint');
+    emailField.addEventListener('keyup', (e) => {
+        regExTest(emailRegEx, emailField, e);
+        if ( emailField.value !== '' ) {
+            emailHint.textContent = 'Email address must be formatted correctly';
+        } else {
+            emailHint.textContent = 'Email address cannot be blank';
+        }
+    })
+}
+realTimeValidator();
