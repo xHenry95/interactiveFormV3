@@ -144,9 +144,9 @@ function regExTest( regEx, element, e ) {
 
 const nameRegEx = /^[a-zA-Z ]{2,30}$/;
 const emailRegEx = /^[^@]+@[^@.]+\.[a-z]+$/i;
-const ccNumRegEx = /(?:\d[ -]*?){13,16}/;
+const ccNumRegEx = /\b\d{13,16}\b/;
 const zipRegEx = /\b\d{5}\b/;
-const cvvRegEx = /\d\d\d/;
+const cvvRegEx = /\b\d{3}\b/;
 
 function submitListener() {
     const form = document.querySelector('form');
